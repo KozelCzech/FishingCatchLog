@@ -1,0 +1,67 @@
+[
+  {
+    "species": "Carp",
+    "catches": [
+      {
+        "weather": "Cloudy",
+        "date": "20/5/2024",
+        "location": "Strzenny",
+        "weight": 3.4,
+        "length": 54.0,
+        "bait": "Garlicky corn",
+        "method": "Carp fishing",
+        "kept": true
+      },
+      {
+        "weather": "Sunny",
+        "date": "13/7/2023",
+        "location": "Berounka - Cernosice",
+        "weight": 2.75,
+        "length": 47.0,
+        "bait": "Strawberry dry ball",
+        "method": "Carp fishing",
+        "kept": false
+      },
+      {
+        "weather": "Rainy",
+        "date": "28/10/2023",
+        "location": "Strzenny",
+        "weight": 2.9,
+        "length": 50.0,
+        "bait": "Monster halibut soft ball",
+        "method": "Carp fishing",
+        "kept": false
+      }
+    ]
+  },
+  {
+    "species": "Bream",
+    "catches": [
+      {
+        "weather": "Sunny",
+        "date": "16/6/2023",
+        "location": "Berounka - Cernosice",
+        "weight": 0.7,
+        "length": 16.0,
+        "bait": "Strawberry dry ball",
+        "method": "Carp fishing",
+        "kept": false
+      }
+    ]
+  },
+  {
+    "species": "Grass Carp",
+    "catches": [
+      {
+        "weather": "Rainy",
+        "date": "25/3/2024",
+        "location": "Peckovak - Buk",
+        "weight": 2.3,
+        "length": 25,
+        "bait": "Garlicky corn",
+        "method": "Carp fishing",
+        "kept": false
+      }
+    ]
+  }
+]
