@@ -1,10 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FishingCatchLog
 {
@@ -17,14 +11,11 @@ namespace FishingCatchLog
             SlowWriter.WriteLine("What species would you like to search for?");
 
             string speciesString = Console.ReadLine();
-
-
             JObject species = jsonReader.GetFishSpeciesByName(speciesString);
 
             foreach (JObject fish in species["catches"])
             {
                 DisplayMenu.DisplayFishInfo(fish);
-
                 SlowWriter.WriteLine("\t--------------------");
             }
         }
@@ -42,15 +33,10 @@ namespace FishingCatchLog
             JArray allSpecies = jsonReader.GetAllFishSpecies();
             foreach (JObject species in allSpecies)
             {
-
                 foreach (JObject fish in species["catches"])
                 {
                     if (fish["location"].ToString() == searchLocation)
-                    {
-                        SlowWriter.WriteLine(species["species"].ToString());
-                        DisplayMenu.DisplayFishInfo(fish);
-                        SlowWriter.WriteLine("\t--------------------");
-                    }
+                        WriteFishInfo(species, fish);
                 }
             }
         }
@@ -58,9 +44,9 @@ namespace FishingCatchLog
 
         public static void ByDate(string searchDateString = "")
         {
+            #region DateInput
             Console.Clear();
             DateTime searchDate = DateTime.Now;
-            Console.WriteLine();
             SlowWriter.WriteLine("Which date would you like to search for? (format: dd/mm/yyyy)");
             if (searchDateString == string.Empty)
             {
@@ -72,18 +58,19 @@ namespace FishingCatchLog
             }
             else
                 SlowWriter.WriteLine(searchDateString);
+            #endregion
 
+            #region SpecifySearchInput
             Console.WriteLine();
             SlowWriter.WriteLine("1. Before");
             SlowWriter.WriteLine("2. After");
-            SlowWriter.WriteLine("Would you like to search for entires before or after this date?");
+            SlowWriter.WriteLine("Would you like to search for entires before or after the chosen date?");
 
             bool isDirectionValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int direction);
             if (!isDirectionValid)
                 ByDate(searchDateString);
+            #endregion
 
-            //execute the search here
-            //make sure to implement the before and after date searching
             Console.WriteLine();
             JArray allSpecies = jsonReader.GetAllFishSpecies();
             foreach (JObject species in allSpecies)
@@ -92,22 +79,10 @@ namespace FishingCatchLog
                 {
                     DateTime catchDate = DateTime.Parse(fish["date"].ToString());
 
-                    if (direction == 1 && catchDate < searchDate)
-                    {
-                        SlowWriter.WriteLine(species["species"].ToString());
-                        DisplayMenu.DisplayFishInfo(fish);
-                        SlowWriter.WriteLine("\t--------------------");
-                    }
-                    else if (direction == 2 && catchDate > searchDate)
-                    {
-                        SlowWriter.WriteLine(species["species"].ToString());
-                        DisplayMenu.DisplayFishInfo(fish);
-                        SlowWriter.WriteLine("\t--------------------");
-                    }
+                    if ((direction == 1 && catchDate < searchDate) || (direction == 2 && catchDate > searchDate))
+                        WriteFishInfo(species, fish);
                 }
             }
-
-
         }
 
 
@@ -115,7 +90,6 @@ namespace FishingCatchLog
         {
             Console.Clear();
             Weather weather = Weather.Undefined;
-
             Info.WriteAllWeather();
 
             SlowWriter.WriteLine("Which weather would you like to search for?");
@@ -132,11 +106,7 @@ namespace FishingCatchLog
                 foreach (JObject fish in species["catches"])
                 {
                     if (fish["weather"].ToString() == weather.ToString())
-                    {
-                        SlowWriter.WriteLine(species["species"].ToString());
-                        DisplayMenu.DisplayFishInfo(fish);
-                        SlowWriter.WriteLine("\t--------------------");
-                    }
+                        WriteFishInfo(species, fish);
                 }
             }
         }
@@ -145,9 +115,7 @@ namespace FishingCatchLog
         public static void ByBait()
         {
             Console.Clear();
-
-            Info.WriteAllBaits();
-
+            Info.WriteAll("bait");
             SlowWriter.WriteLine("What bait would you like to search for?");
 
             string baitString = Console.ReadLine();
@@ -157,11 +125,7 @@ namespace FishingCatchLog
                 foreach (JObject fish in species["catches"])
                 {
                     if (fish["bait"].ToString() == baitString)
-                    {
-                        SlowWriter.WriteLine(species["species"].ToString());
-                        DisplayMenu.DisplayFishInfo(fish);
-                        SlowWriter.WriteLine("\t--------------------");
-                    }
+                        WriteFishInfo(species, fish);
                 }
             }
         }
@@ -171,8 +135,7 @@ namespace FishingCatchLog
         {
             Console.Clear();
 
-            Info.WriteAllMethods();
-
+            Info.WriteAll("method");
             SlowWriter.WriteLine("What method would you like to search for?");
 
             string methodString = Console.ReadLine();
@@ -182,14 +145,17 @@ namespace FishingCatchLog
                 foreach (JObject fish in species["catches"])
                 {
                     if (fish["method"].ToString() == methodString)
-                    {
-                        SlowWriter.WriteLine(species["species"].ToString());
-                        DisplayMenu.DisplayFishInfo(fish);
-                        SlowWriter.WriteLine("\t--------------------");
-                    }
+                        WriteFishInfo(species, fish);
                 }
             }
+        }
 
+
+        private static void WriteFishInfo(JObject species, JObject fish)
+        {
+            SlowWriter.WriteLine(species["species"].ToString());
+            DisplayMenu.DisplayFishInfo(fish);
+            SlowWriter.WriteLine("\t--------------------");
         }
     }
 }

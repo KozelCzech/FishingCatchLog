@@ -1,0 +1,22 @@
+[
+  {
+    "species": "Catfish",
+    "cought": false
+  },
+  {
+    "species": "Carp",
+    "cought": true
+  },
+  {
+    "species": "Northern Pike",
+    "cought": false
+  },
+  {
+    "species": "Yellowfin Tuna",
+    "cought": false
+  },
+  {
+    "species": "Amberjack",
+    "cought": false
+  }
+]

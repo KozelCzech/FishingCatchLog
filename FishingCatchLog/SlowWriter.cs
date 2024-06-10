@@ -9,12 +9,14 @@ namespace FishingCatchLog
 {
     public class SlowWriter
     {
+        static int writingSpeed = 5;
+
         public static void WriteLine(string text)
         {
             foreach (char letter in text)
             {
                 Console.Write(letter);
-                Thread.Sleep(10);
+                Thread.Sleep(writingSpeed);
             }
             Console.WriteLine();
         }
@@ -25,7 +27,7 @@ namespace FishingCatchLog
             foreach (char letter in text)
             {
                 Console.Write(letter);
-                Thread.Sleep(10);
+                Thread.Sleep(writingSpeed);
             }
         }
     }

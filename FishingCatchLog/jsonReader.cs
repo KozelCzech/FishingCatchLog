@@ -1,55 +1,73 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace FishingCatchLog
 {
     public class jsonReader
     {
+        #region catchData
         static readonly string _jsonPath = "../../../Data/catchData.json";
 
-        public static JArray GetAllFishSpecies()
-        {
-            string json = File.ReadAllText(_jsonPath);
-            return JArray.Parse(json);
-        }
+
+        public static JArray GetAllFishSpecies() => JArray.Parse(File.ReadAllText(_jsonPath));
 
 
         public static JObject GetFishSpeciesByName(string name)
         {
             string json = File.ReadAllText(_jsonPath);
-            JObject fish = (JObject)JArray.Parse(json).FirstOrDefault(x => x["species"].ToString() == name);
-            return fish;
+            return (JObject)JArray.Parse(json).FirstOrDefault(x => x["species"].ToString() == name);
         }
 
 
         public static List<string> GetAllLocations()
         {
             List<string> locations = new List<string>();
-            JArray fishSpecies = jsonReader.GetAllFishSpecies();
-            foreach (JObject species in fishSpecies)
+            JArray allSpecies = GetAllFishSpecies();
+            foreach (JObject species in allSpecies)
             {
                 foreach (JObject catches in species["catches"])
-                {
                     locations.Add(catches["location"].ToString());
-                }
             }
-
-            locations = locations.Distinct().ToList();
-
-            return locations;
+            return locations.Distinct().ToList();
         }
 
 
-        public static void SaveJson(JArray json)
+        public static void SaveCatchJson(JArray json) => File.WriteAllText(_jsonPath, json.ToString());
+        #endregion
+
+        #region butcketList
+        static readonly string _bucketListPath = "../../../Data/BucketList.json";
+
+
+        public static JArray GetBucketList() => JArray.Parse(File.ReadAllText(_bucketListPath));
+
+
+        public static JArray GetCoughtList()
         {
-            using (StreamWriter sw = new StreamWriter(_jsonPath, false))
-                sw.Write(json.ToString());
+            JArray bucketList = GetBucketList();
+            JArray coughtList = new JArray();
+            foreach (JObject fish in bucketList)
+            {
+                if ((bool)fish["cought"])
+                    coughtList.Add(fish);
+            }
+            return coughtList;
         }
+
+
+        public static JArray GetUncoughtList()
+        {
+            JArray bucketList = GetBucketList();
+            JArray uncoughtList = new JArray();
+            foreach (JObject fish in bucketList)
+            {
+                if (!(bool)fish["cought"])
+                    uncoughtList.Add(fish);
+            }
+            return uncoughtList;
+        }
+
+
+        public static void SaveBucketListJson(JArray json) => File.WriteAllText(_bucketListPath, json.ToString());
+        #endregion
     }
 }
