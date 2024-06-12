@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
+
 namespace FishingCatchLog
 {
     public class DisplayMenu
@@ -11,7 +12,7 @@ namespace FishingCatchLog
 
             SlowWriter.WriteLine("Catch Logging Software");
 
-            SlowWriter.WriteLine($"Different species cought: {jsonReader.GetAllFishSpecies().Count}");
+            SlowWriter.WriteLine($"Different species cought: {jsonReader.GetAllSpecies().Count}");
             SlowWriter.WriteLine($"Total fish cought: {Info.CoughtFish()} | Total fish kept: {Info.KeptFish()}");
             SlowWriter.WriteLine($"Favorite location: {Info.FavoriteLocation()}");
 
@@ -20,21 +21,19 @@ namespace FishingCatchLog
             SlowWriter.WriteLine("\t2. Search catch log");
             SlowWriter.WriteLine("\t3. Display catch log");
             SlowWriter.WriteLine("\t4. Open bucket list menu");
+            SlowWriter.WriteLine("\t5. Targets menu");
             SlowWriter.WriteLine("\t0. Exit");
 
-            int choice;
-            bool isValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out choice);
-
-            if (!isValid || choice < 0 || choice > 4)
+            bool isValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int choice);
+            if (!isValid || choice < 0 || choice > 5)
             {
-                SlowWriter.WriteLine("Invalid input. Please enter a valid number.");
+                SlowWriter.WriteLine("Invalid input. Please enter a valid number!");
                 Console.ReadKey();
                 return MainMenu();
             }
             Console.WriteLine();
             return choice;
         }
-
 
         #region Catch menus
         public static void LogCatchMenu(string? species = "", double weight = 0, double length = 0, string location = "", string date = "",Weather weather = Weather.Undefined, string bait = "", string method = "", int keepChoice = 0)
@@ -119,7 +118,6 @@ namespace FishingCatchLog
             #endregion
 
             #region Bait & Method
-            //either 2 fields for bait and method or 1 field for both
             SlowWriter.WriteLine("\nWhat bait was used?");
             if (bait == string.Empty)
                 bait = Console.ReadLine();
@@ -131,13 +129,12 @@ namespace FishingCatchLog
                 method = Console.ReadLine();
             else
                 SlowWriter.WriteLine(method);
-
             #endregion
 
             #region Keep
             SlowWriter.WriteLine("1. Yes");
             SlowWriter.WriteLine("2. No");
-            SlowWriter.WriteLine("\nWas the fish kept?");
+            SlowWriter.WriteLine("Was the fish kept?");
             bool isKeptValid = int.TryParse(Console.ReadLine(), out keepChoice);
             if (!isKeptValid || keepChoice < 1 || keepChoice > 2)
                 LogCatchMenu(species: species, weight: weight, length: length, weather: weather, bait: bait, method: method);
@@ -158,12 +155,12 @@ namespace FishingCatchLog
 
             #region Confirmation & Save
             SlowWriter.WriteLine("\nConfirm catch information:");
-            SlowWriter.WriteLine($"Species: {species} - Weight: {weight}, Length: {length} - location: {location}, Date: {date},Weather: {weather} - Kept: {keptString} - Bait: {bait}, Method: {method}");
-            SlowWriter.WriteLine("Press any key to save");
+            SlowWriter.WriteLine($"Species: {species} - Weight: {weight}, Length: {length} - Location: {location}, Date: {date}, Weather: {weather} - Kept: {keptString} - Bait: {bait}, Method: {method}");
+            SlowWriter.WriteLine("Press any key to save...");
             Console.ReadKey();
 
             //save the catch to catchData here
-            JArray allCatches = jsonReader.GetAllFishSpecies();
+            JArray allCatches = jsonReader.GetAllSpecies();
             JObject newCatch = new JObject
             {
                 ["weather"] = weather.ToString(),
@@ -190,8 +187,7 @@ namespace FishingCatchLog
         public static void DisplayAllCatchesMenu()
         {
             Console.Clear();
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
-
+            JArray allSpecies = jsonReader.GetAllSpecies();
             foreach (JObject species in allSpecies)
             {
                 SlowWriter.WriteLine($"{species["species"]}:");
@@ -208,6 +204,7 @@ namespace FishingCatchLog
 
         public static void SearchCatchesMenu()
         {
+            #region Options
             Console.Clear();
             SlowWriter.WriteLine("Search by:");
             SlowWriter.WriteLine("1. Species");
@@ -217,9 +214,9 @@ namespace FishingCatchLog
             SlowWriter.WriteLine("5. Bait");
             SlowWriter.WriteLine("6. Method");
             SlowWriter.WriteLine("0. Back");
+            #endregion
 
-            int choice;
-            bool isChoiceValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out choice);
+            bool isChoiceValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int choice);
             if (!isChoiceValid || choice < 0 || choice > 6)
                 SearchCatchesMenu();
 
@@ -241,7 +238,7 @@ namespace FishingCatchLog
                     Search.ByBait();
                     break;
                 case 6:
-                    Search.ByMehtod();
+                    Search.ByMethod();
                     break;
                 case 0:
                     MainMenu();
@@ -254,18 +251,18 @@ namespace FishingCatchLog
         }
         #endregion
 
-
         #region bucketList
         public static void DisplayBucketListMenu()
         {
             Console.Clear();
             SlowWriter.WriteLine("Bucket list:");
 
-            SlowWriter.WriteLine("1. Add a fish");
-            SlowWriter.WriteLine("2. Remove a fish");
-            SlowWriter.WriteLine("3. Display bucket list");
-            SlowWriter.WriteLine("4. Mark fish cought");
-            SlowWriter.WriteLine("0. Back");
+            SlowWriter.WriteLine("\t1. Add a fish");
+            SlowWriter.WriteLine("\t2. Remove a fish");
+            SlowWriter.WriteLine("\t3. Display bucket list");
+            SlowWriter.WriteLine("\t4. Mark fish cought");
+            SlowWriter.WriteLine("\t0. Back");
+
             bool isChoiceValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int choice);
             if (isChoiceValid || choice < 0 || choice > 4)
             {
@@ -281,6 +278,7 @@ namespace FishingCatchLog
                         break;
                     case 3:
                         Console.Clear();
+                        #region GetInput
                         SlowWriter.WriteLine("1. Cought");
                         SlowWriter.WriteLine("2. Uncought");
                         SlowWriter.WriteLine("3. All");
@@ -288,6 +286,8 @@ namespace FishingCatchLog
                         SlowWriter.WriteLine("Do you wish to display cought, uncought or all fish?");
                         bool isDisplayChoiceValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int displayChoice);
                         string chosenMethod = "all";
+                        #endregion
+                        #region UseInput
                         if (isDisplayChoiceValid || choice < 0 || choice > 3)
                         {
                             switch (displayChoice)
@@ -306,11 +306,14 @@ namespace FishingCatchLog
                                     break;
                             }
                         }
-
                         BucketList.DisplayBucketList(chosenMethod);
+                        #endregion
                         break;
                     case 4:
                         BucketList.MarkFishCought();
+                        break;
+                    default:
+                        DisplayBucketListMenu();
                         break;
                 }
             }
@@ -320,6 +323,55 @@ namespace FishingCatchLog
             Console.ReadKey();
             if (choice != 0)
                 DisplayBucketListMenu();
+        }
+        #endregion
+
+        #region Targeting
+        public static void TargetingMenu()
+        {
+            Console.Clear();
+            SlowWriter.WriteLine("Target\n");
+
+            SlowWriter.WriteLine("1. Add target");
+            SlowWriter.WriteLine("2. Remove target");
+            SlowWriter.WriteLine("3. Display targets");
+            SlowWriter.WriteLine("4. Edit target");
+            SlowWriter.WriteLine("5. Reset target");
+            SlowWriter.WriteLine("0. Back");
+
+            bool isChoiceValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int choice);
+            if (isChoiceValid || choice >= 0 && choice < 6)
+            {
+                //success here
+                switch (choice)
+                {
+                    case 0:
+                        MainMenu();
+                        break;
+                    case 1:
+                        Targeting.AddTarget();
+                        break;
+                    case 2:
+                        Targeting.RemoveTarget();
+                        break;
+                    case 3:
+                        Targeting.DisplayTargets();
+                        break;
+                    case 4:
+                        Targeting.EditTarget();
+                        break;
+                    case 5:
+                        Targeting.EditTarget();
+                        break;
+                    default:
+                        TargetingMenu();
+                        break;
+                }
+            }
+            else
+                TargetingMenu();
+
+
         }
         #endregion
         #endregion

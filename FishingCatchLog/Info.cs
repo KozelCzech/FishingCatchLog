@@ -10,12 +10,12 @@ namespace FishingCatchLog
 {
     public class Info
     {
-        public static int CoughtFish() => jsonReader.GetAllFishSpecies().Sum(species => species["catches"].Count());
+        public static int CoughtFish() => jsonReader.GetAllSpecies().Sum(species => species["catches"].Count());
 
 
         public static int KeptFish()
         {
-            JArray fishSpecies = jsonReader.GetAllFishSpecies();
+            JArray fishSpecies = jsonReader.GetAllSpecies();
 
             return fishSpecies.Sum(species => species["catches"].Where(catches => Convert.ToBoolean(catches["kept"])).Count());
         }
@@ -23,7 +23,7 @@ namespace FishingCatchLog
 
         public static string FavoriteLocation()
         {
-            JArray fishSpecies = jsonReader.GetAllFishSpecies();
+            JArray fishSpecies = jsonReader.GetAllSpecies();
 
             return fishSpecies.SelectMany(species => species["catches"]).GroupBy(catches => catches["location"].ToString()).OrderByDescending(g => g.Count()).First().Key;
         }
@@ -32,7 +32,7 @@ namespace FishingCatchLog
         public static void WriteAllSpecies()
         {
             Console.WriteLine();
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            JArray allSpecies = jsonReader.GetAllSpecies();
 
             for (int i = 0; i < allSpecies.Count; i++)
             {
@@ -71,7 +71,7 @@ namespace FishingCatchLog
         {
             Console.WriteLine();
 
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            JArray allSpecies = jsonReader.GetAllSpecies();
 
             List<string> methods = new List<string>();
 

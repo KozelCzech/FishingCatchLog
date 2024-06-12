@@ -9,7 +9,7 @@ namespace FishingCatchLog
 {
     public class SlowWriter
     {
-        static int writingSpeed = 5;
+        static int writingSpeed = 1;
 
         public static void WriteLine(string text)
         {

@@ -9,7 +9,7 @@ namespace FishingCatchLog
         {
             Console.WriteLine();
             SlowWriter.WriteLine("What fish would you like to add to your bucket list?");
-            string fish = Console.ReadLine();
+            string fish = Console.ReadLine() ?? "";
 
             JArray bucketList = jsonReader.GetBucketList();
             bucketList.Add(new JObject
@@ -19,6 +19,7 @@ namespace FishingCatchLog
             });
 
             jsonReader.SaveBucketListJson(bucketList);
+            SlowWriter.WriteLine($"{fish} added to bucket list");
         }
 
 
@@ -26,12 +27,13 @@ namespace FishingCatchLog
         {
             Console.WriteLine();
             JArray bucketList = jsonReader.GetBucketList();
-            WriteOutFish(bucketList);
+            WriteOutFishes(bucketList);
             SlowWriter.WriteLine("Which fish would you like to remove from your bucket list?");
-            string fish = Console.ReadLine();
-            bucketList.Remove(bucketList.First(x => (string)x["species"] == fish));
+            string fish = Console.ReadLine() ?? "";
+            bucketList.Remove(bucketList.First(x => x["species"].ToString() == fish));
 
             jsonReader.SaveBucketListJson(bucketList);
+            SlowWriter.WriteLine($"{fish} removed from bucket list");
         }
 
 
@@ -44,15 +46,15 @@ namespace FishingCatchLog
             {
                 case "cought":
                     JArray coughtFish = jsonReader.GetCoughtList();
-                    WriteOutFish(coughtFish);
+                    WriteOutFishes(coughtFish);
                     break;
                 case "uncought":
                     JArray uncoughtFish = jsonReader.GetUncoughtList();
-                    WriteOutFish(uncoughtFish);
+                    WriteOutFishes(uncoughtFish);
                     break;
                 default:
                     JArray bucketList = jsonReader.GetBucketList();
-                    WriteOutFish(bucketList);
+                    WriteOutFishes(bucketList);
                     break;
             }
         }
@@ -62,20 +64,21 @@ namespace FishingCatchLog
         {
             Console.Clear();
             JArray uncoughtList = jsonReader.GetUncoughtList();
-            WriteOutFish(uncoughtList);
+            WriteOutFishes(uncoughtList);
             SlowWriter.WriteLine("Which fish would you like to mark as cought?");
-            string fish = Console.ReadLine();
+            string fish = Console.ReadLine() ?? "";
 
             JArray bucketList = jsonReader.GetBucketList();
-            bucketList.FirstOrDefault(x => x["species"].ToString() == fish)["cought"] = true;
-
+            bucketList.First(x => x["species"].ToString() == fish)["cought"] = true;
+            
+            if (fish != "")
             jsonReader.SaveBucketListJson(bucketList);
         }
         #endregion
 
-
+    
         #region Minor
-        private static void WriteOutFish(JArray bucketList)
+        private static void WriteOutFishes(JArray bucketList)
         {
             foreach (JObject fish in bucketList)
             {

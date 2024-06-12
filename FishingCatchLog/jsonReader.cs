@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.Net.NetworkInformation;
 
 namespace FishingCatchLog
 {
@@ -8,7 +9,7 @@ namespace FishingCatchLog
         static readonly string _jsonPath = "../../../Data/catchData.json";
 
 
-        public static JArray GetAllFishSpecies() => JArray.Parse(File.ReadAllText(_jsonPath));
+        public static JArray GetAllSpecies() => JArray.Parse(File.ReadAllText(_jsonPath));
 
 
         public static JObject GetFishSpeciesByName(string name)
@@ -21,7 +22,7 @@ namespace FishingCatchLog
         public static List<string> GetAllLocations()
         {
             List<string> locations = new List<string>();
-            JArray allSpecies = GetAllFishSpecies();
+            JArray allSpecies = GetAllSpecies();
             foreach (JObject species in allSpecies)
             {
                 foreach (JObject catches in species["catches"])
@@ -68,6 +69,41 @@ namespace FishingCatchLog
 
 
         public static void SaveBucketListJson(JArray json) => File.WriteAllText(_bucketListPath, json.ToString());
+        #endregion
+
+
+        #region Targeting
+        static readonly string _targetPath = "../../../Data/targets.json";
+
+
+        public static JArray GetTargetList() => JArray.Parse(File.ReadAllText(_targetPath));
+
+
+        public static List<string> GetAllTargets()
+        {
+            List<string> targets = new List<string>();
+            JArray allTargets = GetTargetList();
+            foreach (JObject target in allTargets)
+            {
+                targets.Add(target["target"].ToString());
+            }
+            return targets.Distinct().ToList();
+        }
+
+
+        public static List<string> GetAllTargetNames()
+        {
+            List<string> names = new List<string>();
+            JArray allTargets = GetTargetList();
+            foreach (JObject target in allTargets)
+            {
+                names.Add(target["name"].ToString());
+            }
+            return names.Distinct().ToList();
+        }
+
+
+        public static void SaveTargetList(JArray json) => File.WriteAllText(_targetPath, json.ToString());
         #endregion
     }
 }

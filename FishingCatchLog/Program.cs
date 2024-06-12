@@ -5,6 +5,11 @@ int choice = 1;
 // TODO: Consider adding a delete menu
 // TODO: figure out other additional features
 
+// TODO: Gear tracking
+// TODO: set catch targets
+        //Carp 0/50
+        //Northern Pike 0/2
+
 while (true)
 {
     choice = DisplayMenu.MainMenu();
@@ -22,6 +27,9 @@ while (true)
             break;
         case 4:
             DisplayMenu.DisplayBucketListMenu();
+            break;
+        case 5:
+            DisplayMenu.TargetingMenu();
             break;
         case 0:
             Environment.Exit(0);

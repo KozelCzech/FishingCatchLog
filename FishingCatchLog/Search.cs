@@ -12,7 +12,6 @@ namespace FishingCatchLog
 
             string speciesString = Console.ReadLine();
             JObject species = jsonReader.GetFishSpeciesByName(speciesString);
-
             foreach (JObject fish in species["catches"])
             {
                 DisplayMenu.DisplayFishInfo(fish);
@@ -25,12 +24,10 @@ namespace FishingCatchLog
         {
             Console.Clear();
             Info.WriteAllLocations();
-
             SlowWriter.WriteLine("Which location would you like to search for?");
-            string searchLocation = Console.ReadLine();
 
-            //find all fish cought on that location
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            string searchLocation = Console.ReadLine();
+            JArray allSpecies = jsonReader.GetAllSpecies();
             foreach (JObject species in allSpecies)
             {
                 foreach (JObject fish in species["catches"])
@@ -71,8 +68,9 @@ namespace FishingCatchLog
                 ByDate(searchDateString);
             #endregion
 
+            #region WriteOutput
             Console.WriteLine();
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            JArray allSpecies = jsonReader.GetAllSpecies();
             foreach (JObject species in allSpecies)
             {
                 foreach (JObject fish in species["catches"])
@@ -83,6 +81,7 @@ namespace FishingCatchLog
                         WriteFishInfo(species, fish);
                 }
             }
+            #endregion
         }
 
 
@@ -99,7 +98,7 @@ namespace FishingCatchLog
             else
                 weather = (Weather)weatherChoice;
 
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            JArray allSpecies = jsonReader.GetAllSpecies();
 
             foreach (JObject species in allSpecies)
             {
@@ -112,6 +111,17 @@ namespace FishingCatchLog
         }
 
 
+        public static void RehtaewYb()
+        {
+            Console.Clear();
+            Weather weather = Weather.Undefined;
+            Info.WriteAllWeather();
+
+            SlowWriter.WriteLine("Which weather would you like to search for?");
+
+        }
+
+
         public static void ByBait()
         {
             Console.Clear();
@@ -119,7 +129,7 @@ namespace FishingCatchLog
             SlowWriter.WriteLine("What bait would you like to search for?");
 
             string baitString = Console.ReadLine();
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            JArray allSpecies = jsonReader.GetAllSpecies();
             foreach (JObject species in allSpecies)
             {
                 foreach (JObject fish in species["catches"])
@@ -131,7 +141,7 @@ namespace FishingCatchLog
         }
 
 
-        public static void ByMehtod()
+        public static void ByMethod()
         {
             Console.Clear();
 
@@ -139,7 +149,7 @@ namespace FishingCatchLog
             SlowWriter.WriteLine("What method would you like to search for?");
 
             string methodString = Console.ReadLine();
-            JArray allSpecies = jsonReader.GetAllFishSpecies();
+            JArray allSpecies = jsonReader.GetAllSpecies();
             foreach (JObject species in allSpecies)
             {
                 foreach (JObject fish in species["catches"])
