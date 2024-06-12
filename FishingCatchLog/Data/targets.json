@@ -20,7 +20,7 @@
     "target": "weight",
     "name": "Truckload",
     "amount": 300,
-    "startDate": "11/06/2024",
+    "startDate": "11/06/2023",
     "complete": false
   },
   {
@@ -28,7 +28,7 @@
     "target": "length",
     "name": "The long mile",
     "amount": 500,
-    "startDate": "11/06/2024",
+    "startDate": "11/06/2023",
     "complete": false
   }
 ]

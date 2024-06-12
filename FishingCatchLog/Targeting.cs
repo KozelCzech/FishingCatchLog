@@ -142,22 +142,30 @@ namespace FishingCatchLog
 
                 if (target["targetType"].ToString() == "species")
                 {
-                    foreach (JObject species in allSpecies.Where(x => x["species"].ToString() == target["target"].ToString()))
+                    try
                     {
-                        foreach (JObject catches in species["catches"])
+                        JObject species = (JObject)allSpecies.Where(x => x["species"].ToString() == target["target"].ToString()).First();
+                        foreach (JObject fish in species["catches"])
                         {
-                            DateTime catchDate = DateTime.Parse(catches["date"].ToString());
+                            DateTime catchDate = DateTime.Parse(fish["date"].ToString());
                             DateTime targetDate = DateTime.Parse(target["startDate"].ToString());
                             if (catchDate >= targetDate)
-                            {
                                 currentAmount++;
-                            }
                         }
+                    }
+                    catch(Exception ex)
+                    {
                     }
                 }
                 else if (target["targetType"].ToString() == "feature")
                 {
-                    //count up all the weight/length from fish taht start from the date target["startDate"]
+                    foreach (JObject species in allSpecies)
+                    {
+                        foreach (JObject fish in species["catches"])
+                        {
+                            currentAmount += (int)Math.Round(Convert.ToDouble(fish[target["target"].ToString()]));
+                        }
+                    }
                 }
 
                 SlowWriter.WriteLine($"{target["name"]}");
