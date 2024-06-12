@@ -2,13 +2,9 @@
 
 int choice = 1;
 
-// TODO: Consider adding a delete menu
 // TODO: figure out other additional features
-
 // TODO: Gear tracking
-// TODO: set catch targets
-        //Carp 0/50
-        //Northern Pike 0/2
+// TODO: Remake app in winforms once all the basic features are in place
 
 while (true)
 {

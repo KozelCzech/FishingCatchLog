@@ -5,6 +5,7 @@
     "name": "Carp hunt",
     "amount": 10,
     "startDate": "11/06/2024",
+    "endDate": "11/06/2025",
     "complete": false
   },
   {
@@ -13,6 +14,7 @@
     "name": "Pike hunt",
     "amount": 2,
     "startDate": "12/06/2024",
+    "endDate": "12/06/2025",
     "complete": false
   },
   {
@@ -20,7 +22,8 @@
     "target": "weight",
     "name": "Truckload",
     "amount": 300,
-    "startDate": "11/06/2023",
+    "startDate": "11/06/2024",
+    "endDate": "11/06/2025",
     "complete": false
   },
   {
@@ -28,7 +31,8 @@
     "target": "length",
     "name": "The long mile",
     "amount": 500,
-    "startDate": "11/06/2023",
+    "startDate": "11/06/2024",
+    "endDate": "11/06/2025",
     "complete": false
   }
 ]

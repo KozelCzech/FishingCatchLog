@@ -335,14 +335,12 @@ namespace FishingCatchLog
             SlowWriter.WriteLine("1. Add target");
             SlowWriter.WriteLine("2. Remove target");
             SlowWriter.WriteLine("3. Display targets");
-            SlowWriter.WriteLine("4. Edit target");
-            SlowWriter.WriteLine("5. Reset target");
+            SlowWriter.WriteLine("4. Reset target");
             SlowWriter.WriteLine("0. Back");
 
             bool isChoiceValid = int.TryParse(Console.ReadKey().KeyChar.ToString(), out int choice);
-            if (isChoiceValid || choice >= 0 && choice < 6)
+            if (isChoiceValid || choice >= 0 && choice < 5)
             {
-                //success here
                 switch (choice)
                 {
                     case 0:
@@ -358,10 +356,7 @@ namespace FishingCatchLog
                         Targeting.DisplayTargets();
                         break;
                     case 4:
-                        Targeting.EditTarget();
-                        break;
-                    case 5:
-                        Targeting.EditTarget();
+                        Targeting.ResetTarget();
                         break;
                     default:
                         TargetingMenu();
