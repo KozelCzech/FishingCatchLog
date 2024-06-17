@@ -24,10 +24,9 @@ namespace FishingCatchLog
             List<string> locations = new List<string>();
             JArray allSpecies = GetAllSpecies();
             foreach (JObject species in allSpecies)
-            {
                 foreach (JObject catches in species["catches"])
                     locations.Add(catches["location"].ToString());
-            }
+            
             return locations.Distinct().ToList();
         }
 
@@ -47,24 +46,10 @@ namespace FishingCatchLog
             JArray bucketList = GetBucketList();
             JArray coughtList = new JArray();
             foreach (JObject fish in bucketList)
-            {
                 if ((bool)fish["cought"])
                     coughtList.Add(fish);
-            }
+
             return coughtList;
-        }
-
-
-        public static JArray GetUncoughtList()
-        {
-            JArray bucketList = GetBucketList();
-            JArray uncoughtList = new JArray();
-            foreach (JObject fish in bucketList)
-            {
-                if (!(bool)fish["cought"])
-                    uncoughtList.Add(fish);
-            }
-            return uncoughtList;
         }
 
 
@@ -84,9 +69,8 @@ namespace FishingCatchLog
             List<string> targets = new List<string>();
             JArray allTargets = GetTargetList();
             foreach (JObject target in allTargets)
-            {
                 targets.Add(target["target"].ToString());
-            }
+
             return targets.Distinct().ToList();
         }
 
@@ -96,12 +80,11 @@ namespace FishingCatchLog
             List<string> names = new List<string>();
             JArray allTargets = GetTargetList();
             foreach (JObject target in allTargets)
-            {
                 names.Add(target["name"].ToString());
-            }
+
             return names.Distinct().ToList();
         }
-
+        
 
         public static void SaveTargetList(JArray json) => File.WriteAllText(_targetPath, json.ToString());
         #endregion

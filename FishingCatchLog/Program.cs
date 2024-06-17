@@ -2,9 +2,9 @@
 
 int choice = 1;
 
-// TODO: figure out other additional features
-// TODO: Gear tracking
+// figure out other additional features
 // TODO: Remake app in winforms once all the basic features are in place
+//consider using MAUI instead to make it mobile compatible, or learn android developement
 
 while (true)
 {
@@ -28,7 +28,7 @@ while (true)
             DisplayMenu.TargetingMenu();
             break;
         case 0:
-            Environment.Exit(0);
+            return 0;
             break;
         default:
             break;

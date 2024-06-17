@@ -31,6 +31,7 @@ namespace FishingCatchLog
                 Console.ReadKey();
                 return MainMenu();
             }
+
             Console.WriteLine();
             return choice;
         }
@@ -191,7 +192,6 @@ namespace FishingCatchLog
             foreach (JObject species in allSpecies)
             {
                 SlowWriter.WriteLine($"{species["species"]}:");
-
                 foreach (JObject fish in species["catches"])
                 {
                     DisplayFishInfo(fish);

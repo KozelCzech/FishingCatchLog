@@ -33,15 +33,13 @@ namespace FishingCatchLog
             bucketList.Remove(bucketList.First(x => x["species"].ToString() == fish));
 
             jsonReader.SaveBucketListJson(bucketList);
-            SlowWriter.WriteLine($"{fish} removed from bucket list");
+            SlowWriter.WriteLine($"{fish} has been removed from bucket list");
         }
 
 
         public static void DisplayBucketList(string display = "all")
         {
             Console.Clear();
-            SlowWriter.WriteLine("All bucket list fish:");
-           
             switch (display)
             {
                 case "cought":
@@ -72,7 +70,7 @@ namespace FishingCatchLog
             bucketList.First(x => x["species"].ToString() == fish)["cought"] = true;
             
             if (fish != "")
-            jsonReader.SaveBucketListJson(bucketList);
+                jsonReader.SaveBucketListJson(bucketList);
         }
         #endregion
 
@@ -83,11 +81,10 @@ namespace FishingCatchLog
             foreach (JObject fish in bucketList)
             {
                 SlowWriter.Write($"{fish["species"]}");
-
                 if ((bool)fish["cought"])
-                    SlowWriter.Write(" [X]");
+                    SlowWriter.WriteLine(" [X]");
                 else
-                    SlowWriter.Write(" [ ]");
+                    SlowWriter.WriteLine(" [ ]");
                 Console.WriteLine();
             }
         }

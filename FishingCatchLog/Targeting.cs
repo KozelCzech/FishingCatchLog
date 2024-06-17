@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,18 +11,10 @@ namespace FishingCatchLog
 {
     public class Targeting
     {
-        //allow for fish targetting
-        //target by species and target amount as well as time from when the targetting starts
-            //(from then on every fish cought fitting certain criteria will be added to the counter automatically)
-
-        //also allow for instead of species to target length or weight and the like
-        //allow for reseting a certain target(change start date) and allow to change some criteria possibly
-
-        //for completed targets, mark them as such and display them uneditable
-
         public static void AddTarget(string target = "", string name = "", string date = "")
         {
             Console.Clear();
+            
             #region WriteOutTargets
             List<string> targets = jsonReader.GetAllTargets();
             List<string> speciesList = new List<string>();
@@ -105,6 +98,7 @@ namespace FishingCatchLog
             allTargets.Add(newTarget);
             jsonReader.SaveTargetList(allTargets);
             #endregion
+
             SlowWriter.WriteLine("Target added successfully");
             Console.ReadKey();
         }
@@ -113,7 +107,6 @@ namespace FishingCatchLog
         public static void RemoveTarget()
         {
             Console.Clear();
-            //show list of all current targets
             List<string> targetNames = jsonReader.GetAllTargetNames();
             for (int i = 0; i < targetNames.Count; i++)
             {
@@ -122,8 +115,8 @@ namespace FishingCatchLog
                     SlowWriter.Write(", ");
             }
             Console.WriteLine();
-            SlowWriter.WriteLine("Which target would you like to remove?");
 
+            SlowWriter.WriteLine("Which target would you like to remove?");
             string target = Console.ReadLine();
             if (!targetNames.Any(x => x == target))
                 RemoveTarget();
@@ -139,8 +132,8 @@ namespace FishingCatchLog
         public static void DisplayTargets()
         {
             Console.Clear();
-            JArray targets = jsonReader.GetTargetList();
-            foreach (JObject target in targets)
+            JArray allTargets = jsonReader.GetTargetList();
+            foreach (JObject target in allTargets)
             {
                 int currentAmount = 0;
                 JArray allSpecies = jsonReader.GetAllSpecies();
@@ -149,19 +142,17 @@ namespace FishingCatchLog
                 {
                     try
                     {
-                        JObject species = (JObject)allSpecies.Where(x => x["species"].ToString() == target["target"].ToString()).First();
+                        JObject species = (JObject)allSpecies.First(x => x["species"].ToString() == target["target"].ToString());
                         foreach (JObject fish in species["catches"])
                         {
                             DateTime catchDate = DateTime.Parse(fish["date"].ToString());
-                            DateTime targetDate = DateTime.Parse(target["startDate"].ToString());
+                            DateTime startDate = DateTime.Parse(target["startDate"].ToString());
                             DateTime endDate = DateTime.Parse(target["endDate"].ToString());
-                            if (catchDate >= targetDate && catchDate <= endDate)
+                            if (catchDate >= startDate && catchDate <= endDate)
                                 currentAmount++;
                         }
                     }
-                    catch(Exception ex)
-                    {
-                    }
+                    catch(Exception) { }
                 }
                 else if (target["targetType"].ToString() == "feature")
                 {
@@ -170,23 +161,29 @@ namespace FishingCatchLog
                         foreach (JObject fish in species["catches"])
                         {
                             DateTime catchDate = DateTime.Parse(fish["date"].ToString());
-                            DateTime targetDate = DateTime.Parse(target["startDate"].ToString());
+                            DateTime startDate = DateTime.Parse(target["startDate"].ToString());
                             DateTime endDate = DateTime.Parse(target["endDate"].ToString());
-                            if (catchDate >= targetDate && catchDate <= endDate)
+                            if (catchDate >= startDate && catchDate <= endDate)
                                 currentAmount += (int)Math.Round(Convert.ToDouble(fish[target["target"].ToString()]));
                         }
                     }
                 }
 
+                #region WriteOutTarget
                 SlowWriter.WriteLine($"{target["name"]}");
                 SlowWriter.WriteLine($"  Target: {target["target"]}");
                 SlowWriter.WriteLine($"  Start date: {target["startDate"]} | End date: {target["endDate"]}");
-                SlowWriter.WriteLine($"  Progress: {currentAmount}/{target["amount"]}");
+                SlowWriter.Write($"  Progress: {currentAmount}/{target["amount"]}");
+                if ((bool)target["complete"] == true || currentAmount >= (int)target["amount"])
+                {
+                    target["complete"] = true;
+                    SlowWriter.Write($" - Target complete!");
+                }
+                Console.WriteLine();
                 SlowWriter.WriteLine($"--------------------");
-
-                //if currentAmount equals or exceeds target amount display target complete and mark it as such in json
-                //possibly add a end date to a target to make it automatically stop taking new fish so it can never complete
+                #endregion
             }
+            jsonReader.SaveTargetList(allTargets);
             Console.ReadKey();
         }
 
@@ -204,9 +201,11 @@ namespace FishingCatchLog
             }
             Console.WriteLine();
             #endregion
+
+            #region Inputs
             SlowWriter.WriteLine("Which target would you like to reset?");
             string name = Console.ReadLine();
-            if(!targetNames.Any(x => x == name))
+            if (!targetNames.Any(x => x == name))
                 ResetTarget();
 
             JArray allTargets = jsonReader.GetTargetList();
@@ -215,10 +214,11 @@ namespace FishingCatchLog
             SlowWriter.WriteLine($"{target["name"]}");
             SlowWriter.WriteLine($"  Target: {target["target"]}");
             SlowWriter.WriteLine($"  Start date: {target["startDate"]} | End date: {target["endDate"]}");
-            SlowWriter.WriteLine($"  target amount: {target["amount"]}");
+            SlowWriter.WriteLine($"  Target amount: {target["amount"]}"); 
 
             SlowWriter.WriteLine("\nWhat will the new end date be? (dd/MM/yyyy)");
             string date = Console.ReadLine();
+            #endregion
 
             #region Save
             allTargets.First(x => x["name"].ToString() == name)["endDate"] = date;

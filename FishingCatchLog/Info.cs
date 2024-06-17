@@ -16,16 +16,14 @@ namespace FishingCatchLog
         public static int KeptFish()
         {
             JArray fishSpecies = jsonReader.GetAllSpecies();
-
             return fishSpecies.Sum(species => species["catches"].Where(catches => Convert.ToBoolean(catches["kept"])).Count());
         }
 
 
         public static string FavoriteLocation()
         {
-            JArray fishSpecies = jsonReader.GetAllSpecies();
-
-            return fishSpecies.SelectMany(species => species["catches"]).GroupBy(catches => catches["location"].ToString()).OrderByDescending(g => g.Count()).First().Key;
+            JArray allSpecies = jsonReader.GetAllSpecies();
+            return allSpecies.SelectMany(species => species["catches"]).GroupBy(catches => catches["location"].ToString()).OrderByDescending(g => g.Count()).First().Key;
         }
 
 
@@ -33,7 +31,6 @@ namespace FishingCatchLog
         {
             Console.WriteLine();
             JArray allSpecies = jsonReader.GetAllSpecies();
-
             for (int i = 0; i < allSpecies.Count; i++)
             {
                 SlowWriter.Write($"{allSpecies[i]["species"]}");
@@ -42,13 +39,12 @@ namespace FishingCatchLog
             }
             Console.WriteLine();
         }
-
+        
 
         public static void WriteAllLocations()
         {
             Console.WriteLine();
             List<string> allLocations = jsonReader.GetAllLocations();
-
             for (int i = 0; i < allLocations.Count; i++)
             {
                 SlowWriter.Write($"{allLocations[i]}");
@@ -72,14 +68,10 @@ namespace FishingCatchLog
             Console.WriteLine();
 
             JArray allSpecies = jsonReader.GetAllSpecies();
-
             List<string> methods = new List<string>();
-
-            foreach (JObject fishes in allSpecies)
-            {
-                foreach (JObject fish in fishes["catches"])
+            foreach (JObject species in allSpecies)
+                foreach (JObject fish in species["catches"])
                     methods.Add(fish[jsonToken].ToString());
-            }
 
             methods = methods.Distinct().ToList();
 
